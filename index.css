@@ -21,3 +21,22 @@ body {
     border-width: 0 2px 3px 2px;
     display: block;
 }
+
+.start-point {
+    border: solid black;
+    border-width: 4px 6px 4px 6px;
+    background-color: red;
+    padding: 20px;
+    text-align: center;
+    margin: 0 auto;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.hidden {
+    display: none;
+}
+
+.visible {
+    display: block;
+}
