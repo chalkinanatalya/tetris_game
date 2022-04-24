@@ -11,4 +11,4 @@ const view = new View(document.querySelector(".container"));
 const controller = new Controller(game, view);
 
 controller.init("Enter");
-// view.showArea(game.viewArea);
+

@@ -14,6 +14,11 @@ body {
 .container {
     width: 500px;
     margin: 0 auto;
+    display: grid;
+    gap: 50px;
+    align-items: flex-start;
+    grid-template-areas: 'next game'
+    'score game';
 }
 
 .game-area {
@@ -22,7 +27,7 @@ body {
     display: block;
 }
 
-.start-point {
+.results {
     border: solid black;
     border-width: 4px 6px 4px 6px;
     background-color: red;

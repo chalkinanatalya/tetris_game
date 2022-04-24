@@ -3,6 +3,12 @@ import { ROWS, COLUMNS } from "../index.js";
 
 //game mechanics
 export class Game {
+  score = 0;
+  lines = 0;
+  lvl = 1;
+  record = window.localStorage.getItem("tetris-record") || 0;
+  points = [0, 100, 300, 700, 1500];
+  gameOver = true;
   area = [
     ["o", "o", "o", "o", "o", "o", "o", "o", "o", "o"],
     ["o", "o", "o", "o", "o", "o", "o", "o", "o", "o"],
@@ -68,6 +74,7 @@ export class Game {
   }
 
   moveDown() {
+    if (this.gameOver) return;
     if (
       this.checkOutPosition(this.activeTetromino.x, this.activeTetromino.y + 1)
     ) {
@@ -147,7 +154,13 @@ export class Game {
     }
 
     this.changeTetromino();
-    this.clearRow();
+    const countRow = this.clearRow();
+    this.calcScore(countRow);
+    this.updatePanels();
+    this.gameOver = !this.checkOutPosition(
+      this.activeTetromino.x,
+      this.activeTetromino.y
+    );
   }
 
   clearRow() {
@@ -172,5 +185,48 @@ export class Game {
       this.area.splice(i, 1);
       this.area.unshift(Array(COLUMNS).fill("o"));
     });
+
+    return rows.length;
+  }
+
+  calcScore(lines) {
+    this.score += this.points[lines];
+    this.lines += lines;
+    this.lvl = Math.floor(this.lines / 10) + 1;
+
+    if (this.score > this.record) {
+      this.record = this.score;
+      localStorage.setItem("tetris-record", this.score);
+    }
+  }
+
+  createUpdatePanels(showScore, showNextTetromino) {
+    showScore(this.lines, this.score, this.lvl, this.record);
+    showNextTetromino(this.nextTetromino.block);
+
+    this.updatePanels = () => {
+      showScore(this.lines, this.score, this.lvl, this.record);
+      showNextTetromino(this.nextTetromino.block);
+    };
+  }
+
+  showResults() {
+    const results = document.querySelector(".results");
+    results.classList.add("visible");
+    results.textContent = `Your score is ${this.score}! Conngrats! Press ENTER to play again`;
+    if (this.score === this.record) {
+      results.textContent = `Your score is ${this.score}! It's a new record! Press ENTER to play again`;
+    }
+  }
+
+  resetGame() {
+    for (let i = 0; i < ROWS; i++) {
+      for (let j = 0; j < COLUMNS; j++) {
+        this.area[i][j] = "o";
+      }
+    }
+    this.lines = 0;
+    this.score = 0;
+    this.lvl = 1;
   }
 }
